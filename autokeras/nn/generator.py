@@ -308,7 +308,7 @@ class DenseNetGenerator(NetworkGenerator):
 
 
 class AlexNetGenerator(NetworkGenerator):
-            #Implementation of the AlexNet.
+        #Implementation of the AlexNet.
    
     def __init__(self, x, num_classes, weights_path='DEFAULT'):\
         #\"\"\"Create the graph of the AlexNet model.\n",
@@ -333,7 +333,7 @@ class AlexNetGenerator(NetworkGenerator):
         # Call the create function to build the computational graph of AlexNet
         self.create()
 
-    def create(self):
+    def generate(self):
             #Create the network graph.
             # 1st Layer: Conv (w ReLu) -> Lrn -> Pool
             conv1 = conv(self.X, 11, 11, 96, 4, 4, padding='SAME', name='conv1')
