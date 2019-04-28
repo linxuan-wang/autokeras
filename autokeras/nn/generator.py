@@ -307,7 +307,7 @@ class DenseNetGenerator(NetworkGenerator):
 
 
 
-class AlexNet(object):
+class AlexNetGenerator(NetworkGenerator):
             #Implementation of the AlexNet.
    
     def __init__(self, x, num_classes, weights_path='DEFAULT'):\
