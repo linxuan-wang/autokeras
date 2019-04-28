@@ -302,3 +302,101 @@ class DenseNetGenerator(NetworkGenerator):
         out = graph.add_layer(self.conv(num_input_features, num_output_features, kernel_size=1, stride=1), out)
         out = graph.add_layer(self.avg_pooling(kernel_size=2, stride=2), out)
         return out
+
+
+
+
+
+class AlexNet(object):
+            #Implementation of the AlexNet.
+   
+    def __init__(self, x, num_classes, weights_path='DEFAULT'):\
+        #\"\"\"Create the graph of the AlexNet model.\n",
+        """Args:
+            x: Placeholder for the input tensor
+            keep_prob: Dropout probability
+            num_classes: Number of classes in the dataset
+            skip_layer: List of names of the layer, that get trained from
+                scratch
+            weights_path: Complete path to the pretrained weight file, if it
+                isn't in the same folder as this code\n",
+        """
+        # Parse input arguments into class variables\n",
+        self.X = x
+        self.NUM_CLASSES = num_classes
+        
+        if weights_path == 'DEFAULT':
+            self.WEIGHTS_PATH = 'bvlc_alexnet.npy'
+        else:
+            self.WEIGHTS_PATH = weights_path
+    
+        # Call the create function to build the computational graph of AlexNet
+        self.create()
+
+    def create(self):
+            #Create the network graph.
+            # 1st Layer: Conv (w ReLu) -> Lrn -> Pool
+            conv1 = conv(self.X, 11, 11, 96, 4, 4, padding='SAME', name='conv1')
+            norm1 = lrn(conv1, 2, 1e-05, 0.75, name='norm1')
+            pool1 = max_pool(norm1, 3, 3, 2, 2, padding='VALID', name='pool1')
+    
+            # 2nd Layer: Conv (w ReLu)  -> Lrn -> Pool with 2 groups\n",
+            conv2 = conv(pool1, 5, 5, 256, 1, 1, groups=2, name='conv2')
+            norm2 = lrn(conv2, 2, 1e-05, 0.75, name='norm2')
+            pool2 = max_pool(norm2, 3, 3, 2, 2, padding='VALID', name='pool2')
+            
+            # 3rd Layer: Conv (w ReLu)\n",
+            conv3 = conv(pool2, 3, 3, 384, 1, 1, name='conv3')
+    
+            # 4th Layer: Conv (w ReLu) splitted into two groups\n",
+            conv4 = conv(conv3, 3, 3, 384, 1, 1, groups=2, name='conv4')
+    
+            # 5th Layer: Conv (w ReLu) -> Pool splitted into two groups\n",
+            conv5 = conv(conv4, 3, 3, 256, 1, 1, groups=2,name='conv5')
+            pool5 = max_pool(conv5, 3, 3, 2, 2, padding='VALID', name='pool5')
+            
+            # 6th Layer: Flatten -> FC (w ReLu) -> Dropout\n",
+            flattened = tf.reshape(pool5, [-1, 6*6*256])
+            fc6 = fc(flattened, 6*6*256, 4096, name='fc6')
+    
+            # 7th Layer: FC (w ReLu) -> Dropout\n",
+            fc7 = fc(fc6, 4096, 4096, name='fc7')
+    
+            # 8th Layer: FC and return unscaled activations\n",
+            self.fc8 = fc(fc7, 4096, self.NUM_CLASSES, relu=False, name='fc8')
+    
+        def load_initial_weights(self, session):
+            """Load weights from file into network.
+            As the weights from http://www.cs.toronto.edu/~guerzhoy/tf_alexnet/
+            come as a dict of lists (e.g. weights['conv1'] is a list) and not as
+            dict of dicts (e.g. weights['conv1'] is a dict with keys 'weights' &
+            'biases') we need a special load function
+            """
+            # Load the weights into memory\n",
+            weights_dict = np.load(self.WEIGHTS_PATH, encoding='bytes').item()
+    
+            # list of all assignment operators\n",
+            assign_list = []
+    
+            # Loop over all layer names stored in the weights dict\n",
+            for op_name in weights_dict:
+    
+                # Check if layer should be trained from scratch\n",
+                with tf.variable_scope(op_name, reuse=True):
+
+                        # Assign weights/biases to their corresponding tf variable\n",
+                    for data in weights_dict[op_name]:
+    
+                            # Biases
+                        if len(data.shape) == 1:
+                            var = tf.get_variable('biases', trainable=False)
+                            assign_list.append(var.assign(data))
+
+                            # Weights\n",
+                        else:
+                            var = tf.get_variable('weights', trainable=False)
+                            assign_list.append(var.assign(data))
+    
+            # create a group operator for all assignments\n",
+            ret = tf.group(assign_list, name="load_weights")
+            return ret
