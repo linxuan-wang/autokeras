@@ -10,7 +10,7 @@ from tests.common import clean_dir, mock_train, TEST_TEMP_DIR, MockProcess
 def test_fit_predict_save(_, _1):
     train_x = np.random.rand(100, 25, 25, 1)
     train_y = np.random.randint(0, 5, 100)
-    for Model in [PredefinedResnet, PredefinedDensenet]:
+    for Model in [PredefinedAlexnet]:
         clf = Model(verbose=True)
         clf.fit(train_x, train_y)
         results = clf.predict(train_x)
