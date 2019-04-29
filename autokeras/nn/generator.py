@@ -365,41 +365,8 @@ class AlexNetGenerator(NetworkGenerator):
             # 8th Layer: FC and return unscaled activations\n",
             self.fc8 = fc(fc7, 4096, self.NUM_CLASSES, relu=False, name='fc8')
     
-        # def load_initial_weights(self, session):
-        #     """Load weights from file into network.
-        #     As the weights from http://www.cs.toronto.edu/~guerzhoy/tf_alexnet/
-        #     come as a dict of lists (e.g. weights['conv1'] is a list) and not as
-        #     dict of dicts (e.g. weights['conv1'] is a dict with keys 'weights' &
-        #     'biases') we need a special load function
-        #     """
-        #     # Load the weights into memory\n",
-        #     weights_dict = np.load(self.WEIGHTS_PATH, encoding='bytes').item()
-    
-        #     # list of all assignment operators\n",
-        #     assign_list = []
-    
-        #     # Loop over all layer names stored in the weights dict\n",
-        #     for op_name in weights_dict:
-    
-        #         # Check if layer should be trained from scratch\n",
-        #         with tf.variable_scope(op_name, reuse=True):
-
-        #                 # Assign weights/biases to their corresponding tf variable\n",
-        #             for data in weights_dict[op_name]:
-    
-        #                     # Biases
-        #                 if len(data.shape) == 1:
-        #                     var = tf.get_variable('biases', trainable=False)
-        #                     assign_list.append(var.assign(data))
-
-        #                     # Weights\n",
-        #                 else:
-        #                     var = tf.get_variable('weights', trainable=False)
-        #                     assign_list.append(var.assign(data))
-    
-        #     # create a group operator for all assignments\n",
-        #     ret = tf.group(assign_list, name="load_weights")
-        #     return ret
+        
+        
     def fc(x, num_in, num_out, name, relu=True):
         """Create a fully connected layer."""
         with tf.variable_scope(name) as scope:
