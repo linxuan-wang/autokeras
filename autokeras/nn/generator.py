@@ -310,7 +310,7 @@ class DenseNetGenerator(NetworkGenerator):
 class AlexNetGenerator(NetworkGenerator):
         #Implementation of the AlexNet.
    
-    def __init__(self, x, num_classes, weights_path='DEFAULT'):\
+    def __init__(self, x, num_classes, weights_path='DEFAULT'):
         """Create the graph of the AlexNet model.
             Args:
             x: Placeholder for the input tensor
@@ -319,9 +319,9 @@ class AlexNetGenerator(NetworkGenerator):
             skip_layer: List of names of the layer, that get trained from
                 scratch
             weights_path: Complete path to the pretrained weight file, if it
-                isn't in the same folder as this code\n",
+                isn't in the same folder as this code
         """
-        # Parse input arguments into class variables\n",
+        # Parse input arguments into class variables
         self.X = x
         self.NUM_CLASSES = num_classes
         
@@ -345,24 +345,24 @@ class AlexNetGenerator(NetworkGenerator):
             norm2 = lrn(conv2, 2, 1e-05, 0.75, name='norm2')
             pool2 = max_pool(norm2, 3, 3, 2, 2, padding='VALID', name='pool2')
             
-            # 3rd Layer: Conv (w ReLu)\n",
+            # 3rd Layer: Conv (w ReLu)
             conv3 = conv(pool2, 3, 3, 384, 1, 1, name='conv3')
     
-            # 4th Layer: Conv (w ReLu) splitted into two groups\n",
+            # 4th Layer: Conv (w ReLu) splitted into two groups
             conv4 = conv(conv3, 3, 3, 384, 1, 1, groups=2, name='conv4')
     
-            # 5th Layer: Conv (w ReLu) -> Pool splitted into two groups\n",
+            # 5th Layer: Conv (w ReLu) -> Pool splitted into two groups
             conv5 = conv(conv4, 3, 3, 256, 1, 1, groups=2,name='conv5')
             pool5 = max_pool(conv5, 3, 3, 2, 2, padding='VALID', name='pool5')
             
-            # 6th Layer: Flatten -> FC (w ReLu) -> Dropout\n",
+            # 6th Layer: Flatten -> FC (w ReLu) -> Dropout
             flattened = tf.reshape(pool5, [-1, 6*6*256])
             fc6 = fc(flattened, 6*6*256, 4096, name='fc6')
     
-            # 7th Layer: FC (w ReLu) -> Dropout\n",
+            # 7th Layer: FC (w ReLu) -> Dropout
             fc7 = fc(fc6, 4096, 4096, name='fc7')
     
-            # 8th Layer: FC and return unscaled activations\n",
+            # 8th Layer: FC and return unscaled activations
             self.fc8 = fc(fc7, 4096, self.NUM_CLASSES, relu=False, name='fc8')
     
         
@@ -371,16 +371,16 @@ class AlexNetGenerator(NetworkGenerator):
         """Create a fully connected layer."""
         with tf.variable_scope(name) as scope:
         
-            # Create tf variables for the weights and biases\n",
+            # Create tf variables for the weights and biases
             weights = tf.get_variable('weights', shape=[num_in, num_out],
                                           trainable=True)
             biases = tf.get_variable('biases', [num_out], trainable=True)
         
-            # Matrix multiply weights and inputs and add bias\n",
+            # Matrix multiply weights and inputs and add bias
             act = tf.nn.xw_plus_b(x, weights, biases, name=scope.name)
         
         if relu:
-            # Apply ReLu non linearity\n",
+            # Apply ReLu non linearity
             relu = tf.nn.relu(act)
             return relu
         else:
