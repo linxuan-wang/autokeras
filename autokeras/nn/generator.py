@@ -365,8 +365,7 @@ class AlexNetGenerator(NetworkGenerator):
             # 8th Layer: FC and return unscaled activations
             self.fc8 = fc(fc7, 4096, self.NUM_CLASSES, relu=False, name='fc8')
     
-        
-        
+                
     def fc(x, num_in, num_out, name, relu=True):
         """Create a fully connected layer."""
         with tf.variable_scope(name) as scope:
