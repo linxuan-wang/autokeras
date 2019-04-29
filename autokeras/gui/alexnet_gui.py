@@ -5,8 +5,8 @@ class alexnet_gui:
     def __init__(self):
         window = Tk()
         theGui = gui(window)
-        window.geometry("500x200")  # You want the size of the app to be 500x500
-        window.resizable(0, 0)  # Don't allow resizing in the x or y direction
+        window.geometry("500x200")  
+        window.resizable(0, 0) 
         window.title('GUI for Alexnet')
         window.mainloop()
         self.var = theGui.var
@@ -27,7 +27,7 @@ class gui:
 
         frame2 = Frame(self.master)
         frame2.pack()
-        # Label(frame1, text='Repetitions of Conv Block', font=("", 12)).grid(row=3, column=0, rowspan=50)
+        Label(frame1, text='local response normalization', font=("", 12)).grid(row=3, column=0, rowspan=50)
         subframe1 = Frame(frame2)
 
         default_r1 = StringVar()
@@ -36,19 +36,15 @@ class gui:
         self.conv2_x.grid(row=3, column=1, columnspan=20)
 
         default_r2 = StringVar()
-        default_r2.set('2')
+        default_r2.set('5')
         self.conv3_x = Entry(subframe1, textvariable=default_r2)
         self.conv3_x.grid(row=4, column=1, columnspan=20)
 
         default_r3 = StringVar()
-        default_r3.set('2')
+        default_r3.set('0.75')
         self.conv4_x = Entry(subframe1, textvariable=default_r3)
         self.conv4_x.grid(row=5, column=1, columnspan=20)
 
-        default_r4 = StringVar()
-        default_r4.set('2')
-        self.conv5_x = Entry(subframe1, textvariable=default_r4)
-        self.conv5_x.grid(row=6, column=1, columnspan=20)
 
         subframe1.grid(row=3, column=0)
         frame3 = Frame(self.master)
