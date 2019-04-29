@@ -10,7 +10,7 @@ from autokeras.search import train
 from autokeras.constant import Constant
 from autokeras.preprocessor import OneHotEncoder
 from autokeras.supervised import SingleModelSupervised
-from autokeras.gui.gui import gui
+from autokeras.gui.alexnet_gui import alexnet_gui
 
 
 class PredefinedModel(SingleModelSupervised):
@@ -110,5 +110,6 @@ class PredefinedDensenet(PredefinedModel):
 
 class PredefinedAlexnet(PredefinedModel):
     def _init_generator(self, n_output_node, input_shape):
-        gui = gui()
-        return AlexNetGenerator(x, n_output_node, input_shape)
+        alex_gui = alexnet_gui()
+        var = alex_gui.var
+        return ResNetGenerator(n_output_node, input_shape)
