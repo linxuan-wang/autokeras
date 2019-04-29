@@ -311,8 +311,8 @@ class AlexNetGenerator(NetworkGenerator):
         #Implementation of the AlexNet.
    
     def __init__(self, x, num_classes, weights_path='DEFAULT'):\
-        #\"\"\"Create the graph of the AlexNet model.\n",
-        """Args:
+        """Create the graph of the AlexNet model.
+            Args:
             x: Placeholder for the input tensor
             keep_prob: Dropout probability
             num_classes: Number of classes in the dataset
